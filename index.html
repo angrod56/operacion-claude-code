@@ -1,0 +1,1527 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Operación Claude Code — 18 de Abril</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #080807;
+      --bg2: #0f0e0c;
+      --bg3: #161410;
+      --border: #2a2318;
+      --accent: #c2410c;
+      --accent2: #ea580c;
+      --accent3: #fb923c;
+      --green: #10b981;
+      --red: #ef4444;
+      --text: #f5f0eb;
+      --muted: #a89880;
+      --muted2: #6b5a48;
+      --card: #0d0c0a;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'IBM Plex Sans', sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ─── TOPBAR ─── */
+    .topbar {
+      background: rgba(194, 65, 12, 0.12);
+      border-bottom: 1px solid rgba(194, 65, 12, 0.3);
+      padding: 10px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      font-weight: 600;
+      font-family: 'JetBrains Mono', monospace;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(12px);
+    }
+    .topbar-name {
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      color: var(--accent3);
+    }
+    .topbar-info {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .topbar-date { color: var(--muted); }
+    .topbar-price {
+      background: var(--accent);
+      color: #fff;
+      padding: 4px 14px;
+      border-radius: 999px;
+      font-size: 13px;
+    }
+
+    /* ─── HERO ─── */
+    .hero {
+      position: relative;
+      padding: 80px 24px 60px;
+      text-align: center;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(194,65,12,.35) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(194,65,12,.07) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(194,65,12,.07) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+    }
+
+    .hero-inner { position: relative; max-width: 860px; margin: 0 auto; }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid rgba(234,88,12,.4);
+      border-radius: 999px;
+      padding: 6px 18px;
+      font-size: 12px;
+      font-weight: 600;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--accent3);
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      margin-bottom: 28px;
+      background: rgba(194,65,12,.1);
+    }
+    .eyebrow-dot {
+      width: 7px; height: 7px;
+      background: var(--accent2);
+      border-radius: 50%;
+      animation: pulse 1.6s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%,100% { opacity: 1; transform: scale(1); }
+      50% { opacity: .5; transform: scale(.7); }
+    }
+
+    .hero h1 {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: clamp(2rem, 5vw, 3.6rem);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -.02em;
+      margin-bottom: 20px;
+    }
+    .hero h1 em {
+      font-style: normal;
+      background: linear-gradient(135deg, var(--accent2) 0%, var(--accent3) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-sub {
+      font-size: clamp(1.1rem, 2.5vw, 1.35rem);
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+    .hero-body {
+      font-size: 1rem;
+      color: var(--muted);
+      max-width: 640px;
+      margin: 0 auto 36px;
+    }
+    .hero-body strong { color: var(--text); }
+
+    /* Progress bar */
+    .progress-wrap {
+      max-width: 440px;
+      margin: 0 auto 12px;
+    }
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .progress-label span:last-child { color: var(--green); font-weight: 700; }
+    .progress-bar-bg {
+      background: var(--border);
+      border-radius: 999px;
+      height: 8px;
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      width: 87%;
+      background: linear-gradient(90deg, var(--accent) 0%, var(--accent3) 100%);
+      border-radius: 999px;
+      animation: fillBar 1.4s ease forwards;
+    }
+    @keyframes fillBar {
+      from { width: 0; }
+      to { width: 87%; }
+    }
+
+    .urgencia {
+      font-size: 13px;
+      color: #fbbf24;
+      font-weight: 600;
+      margin-bottom: 18px;
+    }
+
+    /* Countdown */
+    .countdown {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 32px;
+    }
+    .cd-block {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 20px;
+      min-width: 72px;
+      text-align: center;
+    }
+    .cd-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--accent3);
+      line-height: 1;
+    }
+    .cd-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--muted2);
+      margin-top: 4px;
+    }
+    .cd-sep {
+      font-size: 2rem;
+      color: var(--muted2);
+      align-self: center;
+    }
+
+    /* CTA Button */
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
+      color: #fff;
+      font-weight: 800;
+      font-size: 1rem;
+      padding: 16px 36px;
+      border-radius: 12px;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      letter-spacing: .01em;
+      transition: transform .15s, box-shadow .15s;
+      box-shadow: 0 0 32px rgba(194,65,12,.45);
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 48px rgba(194,65,12,.65);
+    }
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: transparent;
+      color: var(--text);
+      font-weight: 700;
+      font-size: .95rem;
+      padding: 14px 32px;
+      border-radius: 12px;
+      text-decoration: none;
+      border: 2px solid var(--accent);
+      cursor: pointer;
+      letter-spacing: .01em;
+      transition: background .15s, transform .15s;
+    }
+    .btn-secondary:hover {
+      background: rgba(194,65,12,.12);
+      transform: translateY(-2px);
+    }
+
+    /* Ticker */
+    .ticker-wrap {
+      overflow: hidden;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      background: var(--bg2);
+      padding: 12px 0;
+      margin-top: 48px;
+    }
+    .ticker-track {
+      display: flex;
+      gap: 48px;
+      animation: ticker 22s linear infinite;
+      white-space: nowrap;
+    }
+    .ticker-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--accent3);
+      flex-shrink: 0;
+    }
+    .ticker-item::before { content: '✓'; color: var(--green); }
+    @keyframes ticker {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
+    /* ─── SECTIONS GENERAL ─── */
+    section { padding: 80px 24px; }
+    .container { max-width: 900px; margin: 0 auto; }
+    .container-wide { max-width: 1100px; margin: 0 auto; }
+
+    .section-badge {
+      display: inline-block;
+      border: 1px solid rgba(234,88,12,.4);
+      border-radius: 6px;
+      padding: 4px 14px;
+      font-size: 11px;
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--accent3);
+      background: rgba(194,65,12,.1);
+      margin-bottom: 20px;
+    }
+
+    h2 {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -.02em;
+      margin-bottom: 16px;
+    }
+    h2 em {
+      font-style: normal;
+      background: linear-gradient(135deg, var(--accent2) 0%, var(--accent3) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    h2 s { text-decoration: line-through; color: var(--muted2); }
+
+    .section-lead {
+      font-size: 1.05rem;
+      color: var(--muted);
+      max-width: 640px;
+      margin-bottom: 40px;
+    }
+
+    /* ─── DIFF SECTION ─── */
+    .diff-section { background: var(--bg2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+
+    .compare-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 32px;
+    }
+    .compare-table thead tr th {
+      padding: 14px 20px;
+      font-size: .9rem;
+      font-weight: 700;
+      text-align: left;
+    }
+    .compare-table thead tr th:first-child { color: var(--red); }
+    .compare-table thead tr th:last-child { color: var(--green); }
+    .compare-table tbody tr {
+      border-top: 1px solid var(--border);
+      transition: background .15s;
+    }
+    .compare-table tbody tr:hover { background: rgba(255,255,255,.02); }
+    .compare-table tbody tr td {
+      padding: 14px 20px;
+      font-size: .95rem;
+    }
+    .compare-table tbody tr td:first-child { color: var(--muted); }
+    .compare-table tbody tr td:last-child { color: var(--text); font-weight: 600; }
+
+    /* ─── TESTIMONIALS ─── */
+    .testimonials { background: var(--bg); }
+    .testi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 16px;
+      margin-top: 32px;
+    }
+    .testi-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      font-size: .9rem;
+      color: var(--muted);
+      line-height: 1.6;
+      transition: border-color .2s;
+    }
+    .testi-card:hover { border-color: var(--accent); }
+    .testi-name { font-weight: 700; color: var(--text); margin-top: 12px; font-size: .85rem; }
+    .testi-role { font-size: .78rem; color: var(--muted2); }
+    .testi-stars { color: #fbbf24; font-size: 13px; margin-bottom: 10px; }
+
+    /* ─── AUTHORITY ─── */
+    .authority { background: var(--bg2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .stat-big {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      font-weight: 800;
+      color: var(--accent3);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    .quote-box {
+      border-left: 4px solid var(--accent);
+      padding: 20px 24px;
+      background: rgba(194,65,12,.06);
+      border-radius: 0 12px 12px 0;
+      margin: 32px 0;
+      font-style: italic;
+      color: var(--text);
+      font-size: 1.05rem;
+    }
+    .quote-box cite {
+      display: block;
+      font-style: normal;
+      font-size: .85rem;
+      color: var(--accent3);
+      font-weight: 700;
+      margin-top: 10px;
+    }
+    /* ─── LOGO MARQUEE ─── */
+    .logos-marquee-wrap {
+      overflow: hidden;
+      margin: 36px 0;
+      position: relative;
+    }
+    .logos-marquee-wrap::before,
+    .logos-marquee-wrap::after {
+      content: '';
+      position: absolute;
+      top: 0; bottom: 0;
+      width: 80px;
+      z-index: 2;
+      pointer-events: none;
+    }
+    .logos-marquee-wrap::before {
+      left: 0;
+      background: linear-gradient(90deg, var(--bg2) 0%, transparent 100%);
+    }
+    .logos-marquee-wrap::after {
+      right: 0;
+      background: linear-gradient(270deg, var(--bg2) 0%, transparent 100%);
+    }
+    .logos-track {
+      display: flex;
+      gap: 16px;
+      animation: logoScroll 28s linear infinite;
+      width: max-content;
+    }
+    .logos-track-reverse {
+      animation-direction: reverse;
+      animation-duration: 22s;
+      margin-top: 14px;
+    }
+    @keyframes logoScroll {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+    .logo-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px 28px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      min-width: 160px;
+      flex-shrink: 0;
+      transition: border-color .2s, transform .2s;
+      cursor: default;
+    }
+    .logo-card:hover {
+      border-color: var(--accent2);
+      transform: translateY(-3px);
+    }
+    .logo-icon {
+      font-size: 1.6rem;
+      line-height: 1;
+    }
+    .logo-name {
+      font-size: .78rem;
+      font-weight: 800;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .logo-card.brand-spotify  { --brand: #1db954; }
+    .logo-card.brand-cnn      { --brand: #cc0000; }
+    .logo-card.brand-forbes   { --brand: #c8a84b; }
+    .logo-card.brand-accenture{ --brand: #a100ff; }
+    .logo-card.brand-exame    { --brand: #e8801a; }
+    .logo-card.brand-wsj      { --brand: #0274b6; }
+    .logo-card.brand-techcrunch{ --brand: #0a7d3e; }
+    .logo-card.brand-wired    { --brand: #ffffff; }
+    .logo-card.brand-bloomberg { --brand: #f60000; }
+    .logo-card.brand-mit      { --brand: #8a0000; }
+    .logo-card:hover .logo-name { color: var(--brand, var(--accent3)); }
+    .impact-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin: 24px 0;
+    }
+    .impact-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      font-size: .97rem;
+      color: var(--muted);
+    }
+    .impact-list li::before {
+      content: '→';
+      color: var(--accent2);
+      font-weight: 800;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .impact-list strong { color: var(--text); }
+    .highlight-box {
+      background: rgba(194,65,12,.1);
+      border: 1px solid rgba(194,65,12,.35);
+      border-radius: 14px;
+      padding: 24px 28px;
+      font-size: 1rem;
+      margin-top: 32px;
+    }
+    .highlight-box strong { color: var(--accent3); }
+
+    /* ─── PROGRAMA ─── */
+    .programa { background: var(--bg); }
+    .pillars {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+      gap: 20px;
+      margin-top: 40px;
+    }
+    .pilar-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 28px;
+      position: relative;
+      overflow: hidden;
+      transition: border-color .2s, transform .2s;
+    }
+    .pilar-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-3px);
+    }
+    .pilar-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent) 0%, var(--accent3) 100%);
+    }
+    .pilar-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .75rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--accent2);
+      margin-bottom: 8px;
+    }
+    .pilar-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.3rem;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+    .pilar-subtitle {
+      font-size: .85rem;
+      font-weight: 600;
+      color: var(--accent3);
+      margin-bottom: 14px;
+    }
+    .pilar-body {
+      font-size: .9rem;
+      color: var(--muted);
+      margin-bottom: 16px;
+      line-height: 1.6;
+    }
+    .pilar-result {
+      background: rgba(16,185,129,.08);
+      border: 1px solid rgba(16,185,129,.25);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: .82rem;
+      color: var(--green);
+      font-weight: 600;
+    }
+
+    .programa-close {
+      text-align: center;
+      margin-top: 48px;
+      padding: 32px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+    }
+    .programa-close p {
+      font-size: 1.05rem;
+      color: var(--muted);
+      margin-bottom: 24px;
+      max-width: 520px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* ─── BONUS ─── */
+    .bonus { background: var(--bg2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .bonus-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 20px;
+      margin-top: 36px;
+    }
+    .bonus-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px;
+    }
+    .bonus-icon {
+      font-size: 1.8rem;
+      margin-bottom: 12px;
+    }
+    .bonus-card h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    .bonus-card p {
+      font-size: .88rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* ─── PARA QUIEN ─── */
+    .audiencia { background: var(--bg); }
+    .profiles-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 16px;
+      margin-top: 36px;
+    }
+    .profile-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px 20px;
+      text-align: center;
+      transition: border-color .2s;
+    }
+    .profile-card:hover { border-color: var(--accent); }
+    .profile-icon { font-size: 2rem; margin-bottom: 10px; }
+    .profile-card h3 { font-size: .95rem; font-weight: 700; margin-bottom: 8px; }
+    .profile-card p { font-size: .82rem; color: var(--muted); line-height: 1.5; }
+    .audiencia-cta {
+      margin-top: 40px;
+      padding: 28px;
+      background: rgba(194,65,12,.08);
+      border: 1px solid rgba(194,65,12,.3);
+      border-radius: 14px;
+      text-align: center;
+      font-size: 1rem;
+      color: var(--muted);
+    }
+    .audiencia-cta strong { color: var(--text); display: block; margin-bottom: 16px; }
+
+    /* ─── OBJECCION ─── */
+    .objeccion { background: var(--bg2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .objeccion-inner {
+      max-width: 640px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .big-no {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 5rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--accent2) 0%, var(--accent3) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1;
+      margin: 16px 0;
+    }
+
+    /* ─── PRECIO ─── */
+    .precio { background: var(--bg); }
+    .price-card {
+      max-width: 480px;
+      margin: 0 auto;
+      background: var(--card);
+      border: 2px solid var(--accent);
+      border-radius: 24px;
+      padding: 40px 36px;
+      text-align: center;
+      box-shadow: 0 0 60px rgba(194,65,12,.25);
+    }
+    .price-label {
+      font-size: .8rem;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    .price-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 3.5rem;
+      font-weight: 900;
+      color: var(--text);
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+    .price-currency { font-size: 1.5rem; color: var(--accent3); }
+    .price-desc {
+      font-size: .9rem;
+      color: var(--muted);
+      margin: 16px 0 28px;
+    }
+    .guarantees {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 20px;
+      text-align: left;
+    }
+    .guarantee-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: .85rem;
+      color: var(--muted);
+    }
+    .guarantee-item::before { content: '✅'; font-size: 14px; }
+
+    /* ─── MENTOR ─── */
+    .mentor { background: var(--bg2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .mentor-inner {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 48px;
+      align-items: start;
+    }
+    @media (max-width: 640px) {
+      .mentor-inner { grid-template-columns: 1fr; }
+    }
+    .mentor-photo {
+      width: 100%;
+      aspect-ratio: 3/4;
+      background: var(--bg3);
+      border: 2px solid var(--accent);
+      border-radius: 20px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 5rem;
+      box-shadow: 0 0 40px rgba(194,65,12,.2);
+      color: var(--accent3);
+    }
+    .mentor-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.8rem;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+    .mentor-company { font-size: .9rem; color: var(--accent3); font-weight: 600; margin-bottom: 16px; }
+    .mentor-bio { font-size: .95rem; color: var(--muted); line-height: 1.7; margin-bottom: 24px; }
+    .mentor-stats {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+    .mstat {
+      text-align: center;
+    }
+    .mstat-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--accent3);
+    }
+    .mstat-label { font-size: .75rem; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
+
+    /* ─── FAQ ─── */
+    .faq { background: var(--bg); }
+    .faq-list {
+      max-width: 720px;
+      margin: 36px auto 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    details {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: border-color .2s;
+    }
+    details[open] { border-color: var(--accent); }
+    summary {
+      padding: 18px 20px;
+      font-weight: 600;
+      font-size: .95rem;
+      cursor: pointer;
+      list-style: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      user-select: none;
+    }
+    summary::after {
+      content: '+';
+      font-size: 1.3rem;
+      color: var(--accent3);
+      flex-shrink: 0;
+      transition: transform .2s;
+    }
+    details[open] summary::after { content: '−'; }
+    .faq-answer {
+      padding: 0 20px 18px;
+      font-size: .9rem;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    /* ─── FINAL CTA ─── */
+    .final-cta {
+      padding: 80px 24px;
+      text-align: center;
+      background: var(--bg2);
+      border-top: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+    .final-cta::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 70% 80% at 50% 100%, rgba(194,65,12,.2) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .final-logo {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem;
+      font-weight: 800;
+      letter-spacing: .05em;
+      color: var(--accent3);
+      margin-bottom: 32px;
+    }
+    .final-cta h2 {
+      font-size: clamp(1.8rem, 5vw, 3rem);
+      margin-bottom: 12px;
+    }
+    .final-price-tag {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--accent3);
+      margin: 16px 0 32px;
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      padding: 24px;
+      text-align: center;
+      font-size: .78rem;
+      color: var(--muted2);
+      border-top: 1px solid var(--border);
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 640px) {
+      .topbar { flex-direction: column; gap: 8px; }
+      .pillars { grid-template-columns: 1fr; }
+      .mentor-inner { grid-template-columns: 1fr; }
+      .compare-table { font-size: .82rem; }
+      .countdown { gap: 6px; }
+      .cd-block { padding: 10px 12px; min-width: 58px; }
+      .cd-num { font-size: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<nav class="topbar">
+  <span class="topbar-name">Operación Claude Code</span>
+  <div class="topbar-info">
+    <span class="topbar-date">18 de Abril</span>
+    <span class="topbar-price">USD $27</span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-inner">
+    <div class="eyebrow">
+      <span class="eyebrow-dot"></span>
+      8 Horas de Inmersión En Vivo — 18 de Abril
+    </div>
+
+    <h1>1 día para colocar <em>equipos de I.A</em> funcionando en tu operación</h1>
+
+    <p class="hero-sub">Y nunca más depender de costos fijos pesados para ejecutar.</p>
+
+    <p class="hero-body">
+      En solo 1 día, sal con <strong>equipos de I.A construidos en Claude Code</strong> corriendo en tu operación,
+      sustituyendo funciones y herramientas que hoy cuestan hasta <strong>$1,000 USD al mes</strong> en tu empresa.
+    </p>
+
+    <div class="progress-wrap">
+      <div class="progress-label">
+        <span>Disponibilidad del lote actual</span>
+        <span>87% vendido</span>
+      </div>
+      <div class="progress-bar-bg">
+        <div class="progress-bar-fill"></div>
+      </div>
+      <div style="margin-top:8px;font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--muted2);text-align:right;">
+        Al llegar al 100% el precio sube a <strong style="color:#fb923c">USD $37</strong>
+      </div>
+    </div>
+
+    <p class="urgencia">⚠ Quedan pocos cupos a este precio</p>
+
+    <div class="countdown">
+      <div class="cd-block">
+        <div class="cd-num" id="cd-d">00</div>
+        <div class="cd-label">Días</div>
+      </div>
+      <span class="cd-sep">:</span>
+      <div class="cd-block">
+        <div class="cd-num" id="cd-h">00</div>
+        <div class="cd-label">Horas</div>
+      </div>
+      <span class="cd-sep">:</span>
+      <div class="cd-block">
+        <div class="cd-num" id="cd-m">00</div>
+        <div class="cd-label">Minutos</div>
+      </div>
+      <span class="cd-sep">:</span>
+      <div class="cd-block">
+        <div class="cd-num" id="cd-s">00</div>
+        <div class="cd-label">Segundos</div>
+      </div>
+    </div>
+
+    <a href="#precio" class="btn-primary">QUIERO PARTICIPAR EN LA INMERSIÓN →</a>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker-track">
+    <span class="ticker-item">Atención automatizada</span>
+    <span class="ticker-item">Contenido en automático</span>
+    <span class="ticker-item">Dashboards en tiempo real</span>
+    <span class="ticker-item">Campañas automáticas</span>
+    <span class="ticker-item">Leads calificados 24h/día</span>
+    <span class="ticker-item">Sin programador</span>
+    <span class="ticker-item">Sin código</span>
+    <span class="ticker-item">Operación inteligente</span>
+    <!-- duplicado para loop continuo -->
+    <span class="ticker-item">Atención automatizada</span>
+    <span class="ticker-item">Contenido en automático</span>
+    <span class="ticker-item">Dashboards en tiempo real</span>
+    <span class="ticker-item">Campañas automáticas</span>
+    <span class="ticker-item">Leads calificados 24h/día</span>
+    <span class="ticker-item">Sin programador</span>
+    <span class="ticker-item">Sin código</span>
+    <span class="ticker-item">Operación inteligente</span>
+  </div>
+</div>
+
+<!-- DIFERENCIACIÓN -->
+<section class="diff-section">
+  <div class="container">
+    <div class="section-badge">≠ TEORÍA</div>
+    <h2>Esto no es solo otra<br><em>inmersión de I.A.</em></h2>
+    <p class="section-lead">
+      No es slides con teoría. No es otro curso que ves y olvidas.<br>
+      Es 1 día completo en vivo, <strong style="color:var(--text)">construyendo junto a nosotros</strong> un equipo de I.A completo dentro de Claude y listo para trabajar en tu operación.
+    </p>
+
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>❌ Cursos Comunes</th>
+          <th>✅ Operación Claude Code</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Slides y teoría</td>
+          <td>Implementación en vivo</td>
+        </tr>
+        <tr>
+          <td>Lo ves y lo olvidas</td>
+          <td>Sales con el equipo creado</td>
+        </tr>
+        <tr>
+          <td>Nada funcionando al final</td>
+          <td>I.A real corriendo en tu operación</td>
+        </tr>
+        <tr>
+          <td>Costo fijo pesado al mes</td>
+          <td>Centavos por uso, sin costo fijo</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- TESTIMONIOS -->
+<section class="testimonials">
+  <div class="container">
+    <h2 style="text-align:center">Mira lo que ya está pasando con quienes<br>aprendieron la forma correcta de usar Claude...</h2>
+    <div class="testi-grid">
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        "Automaticé en 1 día lo que mi equipo tardaba 3 semanas en hacer. Claude Code cambió completamente la forma en que opero mi agencia."
+        <div class="testi-name">Maria R.</div>
+        <div class="testi-role">Agencia de Marketing · São Paulo</div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        "Salí de la inmersión con 4 agentes corriendo en mi operación. Reduje mi equipo de soporte de 5 personas a 1 coordinador."
+        <div class="testi-name">Carlos M.</div>
+        <div class="testi-role">E-commerce · Buenos Aires</div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        "Sin saber nada de código, monté un squad completo para mi lanzamiento. Las ventas se procesan solas."
+        <div class="testi-name">Fernanda L.</div>
+        <div class="testi-role">Infoproductora · Medellín</div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        "Trabajo solo y ahora opero como si tuviera 10 empleados. El ROI de la inmersión fue inmediato."
+        <div class="testi-name">Rodrigo T.</div>
+        <div class="testi-role">Consultor Digital · Lima</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AUTORIDAD -->
+<section class="authority">
+  <div class="container">
+    <div class="section-badge">TENDENCIA MUNDIAL</div>
+    <div class="stat-big">8 de 10</div>
+    <p class="section-lead">
+      empresas Fortune 100 ya usan Claude en su operación.
+    </p>
+
+    <div class="quote-box">
+      "La IA va a dominar toda la ingeniería de software en 6 a 12 meses."
+      <cite>— Dario Amodei · CEO Anthropic &nbsp;|&nbsp; Foro Económico Mundial, Ene 2026</cite>
+    </div>
+
+    <h2>Esto está pasando a escala<br>en todo el mundo...</h2>
+
+    <div class="logos-marquee-wrap">
+      <!-- Fila 1 — izquierda → derecha -->
+      <div class="logos-track">
+        <div class="logo-card brand-spotify">
+          <div class="logo-icon">🎵</div>
+          <div class="logo-name">Spotify</div>
+        </div>
+        <div class="logo-card brand-cnn">
+          <div class="logo-icon">📺</div>
+          <div class="logo-name">CNN Business</div>
+        </div>
+        <div class="logo-card brand-forbes">
+          <div class="logo-icon">📰</div>
+          <div class="logo-name">Forbes</div>
+        </div>
+        <div class="logo-card brand-accenture">
+          <div class="logo-icon">⚡</div>
+          <div class="logo-name">Accenture</div>
+        </div>
+        <div class="logo-card brand-exame">
+          <div class="logo-icon">📊</div>
+          <div class="logo-name">Exame</div>
+        </div>
+        <div class="logo-card brand-wsj">
+          <div class="logo-icon">🗞️</div>
+          <div class="logo-name">Wall St. Journal</div>
+        </div>
+        <div class="logo-card brand-techcrunch">
+          <div class="logo-icon">🚀</div>
+          <div class="logo-name">TechCrunch</div>
+        </div>
+        <div class="logo-card brand-bloomberg">
+          <div class="logo-icon">💹</div>
+          <div class="logo-name">Bloomberg</div>
+        </div>
+        <!-- duplicado para loop infinito -->
+        <div class="logo-card brand-spotify">
+          <div class="logo-icon">🎵</div>
+          <div class="logo-name">Spotify</div>
+        </div>
+        <div class="logo-card brand-cnn">
+          <div class="logo-icon">📺</div>
+          <div class="logo-name">CNN Business</div>
+        </div>
+        <div class="logo-card brand-forbes">
+          <div class="logo-icon">📰</div>
+          <div class="logo-name">Forbes</div>
+        </div>
+        <div class="logo-card brand-accenture">
+          <div class="logo-icon">⚡</div>
+          <div class="logo-name">Accenture</div>
+        </div>
+        <div class="logo-card brand-exame">
+          <div class="logo-icon">📊</div>
+          <div class="logo-name">Exame</div>
+        </div>
+        <div class="logo-card brand-wsj">
+          <div class="logo-icon">🗞️</div>
+          <div class="logo-name">Wall St. Journal</div>
+        </div>
+        <div class="logo-card brand-techcrunch">
+          <div class="logo-icon">🚀</div>
+          <div class="logo-name">TechCrunch</div>
+        </div>
+        <div class="logo-card brand-bloomberg">
+          <div class="logo-icon">💹</div>
+          <div class="logo-name">Bloomberg</div>
+        </div>
+      </div>
+
+      <!-- Fila 2 — derecha → izquierda -->
+      <div class="logos-track logos-track-reverse">
+        <div class="logo-card brand-wired">
+          <div class="logo-icon">🔌</div>
+          <div class="logo-name">Wired</div>
+        </div>
+        <div class="logo-card brand-mit">
+          <div class="logo-icon">🎓</div>
+          <div class="logo-name">MIT Tech Review</div>
+        </div>
+        <div class="logo-card brand-wsj">
+          <div class="logo-icon">🏦</div>
+          <div class="logo-name">Daily Journal</div>
+        </div>
+        <div class="logo-card brand-techcrunch">
+          <div class="logo-icon">🌐</div>
+          <div class="logo-name">The Verge</div>
+        </div>
+        <div class="logo-card brand-bloomberg">
+          <div class="logo-icon">📡</div>
+          <div class="logo-name">Reuters</div>
+        </div>
+        <div class="logo-card brand-forbes">
+          <div class="logo-icon">🏢</div>
+          <div class="logo-name">Business Insider</div>
+        </div>
+        <div class="logo-card brand-cnn">
+          <div class="logo-icon">📌</div>
+          <div class="logo-name">Fast Company</div>
+        </div>
+        <div class="logo-card brand-exame">
+          <div class="logo-icon">💡</div>
+          <div class="logo-name">Época Negócios</div>
+        </div>
+        <!-- duplicado -->
+        <div class="logo-card brand-wired">
+          <div class="logo-icon">🔌</div>
+          <div class="logo-name">Wired</div>
+        </div>
+        <div class="logo-card brand-mit">
+          <div class="logo-icon">🎓</div>
+          <div class="logo-name">MIT Tech Review</div>
+        </div>
+        <div class="logo-card brand-wsj">
+          <div class="logo-icon">🏦</div>
+          <div class="logo-name">Daily Journal</div>
+        </div>
+        <div class="logo-card brand-techcrunch">
+          <div class="logo-icon">🌐</div>
+          <div class="logo-name">The Verge</div>
+        </div>
+        <div class="logo-card brand-bloomberg">
+          <div class="logo-icon">📡</div>
+          <div class="logo-name">Reuters</div>
+        </div>
+        <div class="logo-card brand-forbes">
+          <div class="logo-icon">🏢</div>
+          <div class="logo-name">Business Insider</div>
+        </div>
+        <div class="logo-card brand-cnn">
+          <div class="logo-icon">📌</div>
+          <div class="logo-name">Fast Company</div>
+        </div>
+        <div class="logo-card brand-exame">
+          <div class="logo-icon">💡</div>
+          <div class="logo-name">Época Negócios</div>
+        </div>
+      </div>
+    </div>
+
+    <ul class="impact-list">
+      <li>La Accenture ya entrenó a <strong>30,000 profesionales</strong> en Claude.</li>
+      <li>Spotify redujo <strong>90% del tiempo de su equipo de ingeniería</strong> con esta I.A.</li>
+      <li>Un ingeniero principal de Google declaró: <em>"Claude reprodujo 1 año entero de trabajo en 1 hora."</em></li>
+    </ul>
+
+    <div class="highlight-box">
+      No es hype. Es el mercado en movimiento.<br>
+      Y el <strong>99% de las empresas</strong> aún no han añadido esta inteligencia a su operación.<br><br>
+      <strong>Esta es la ventana. Y no va a estar abierta para siempre.</strong>
+    </div>
+  </div>
+</section>
+
+<!-- PROGRAMA -->
+<section class="programa" id="programa">
+  <div class="container-wide">
+    <div class="section-badge">EL PROGRAMA</div>
+    <h2>¿Qué vas a <s>ver</s> <em>construir</em> en esta inmersión?</h2>
+    <p class="section-lead">Los 4 pilares de nuestro entrenamiento:</p>
+
+    <div class="pillars">
+      <div class="pilar-card">
+        <div class="pilar-num">Pilar 1</div>
+        <div class="pilar-title">MAPEAR</div>
+        <div class="pilar-subtitle">Donde tu operación está sangrando</div>
+        <p class="pilar-body">
+          Todo negocio tiene procesos que drenan tiempo y dinero sin que el dueño lo note.
+          Antes de construir cualquier cosa, necesitas saber exactamente dónde atacar primero.
+          Sal con el mapa de tus <strong style="color:var(--text)">3 mayores cuellos de botella</strong>, con claridad de cuál sustituir primero.
+        </p>
+        <div class="pilar-result">✅ Resultado: 3 cuellos de botella mapeados — listos para automatizar</div>
+      </div>
+
+      <div class="pilar-card">
+        <div class="pilar-num">Pilar 2</div>
+        <div class="pilar-title">CONSTRUIR</div>
+        <div class="pilar-subtitle">Tu equipo de I.A con Claude</div>
+        <p class="pilar-body">
+          Aquí creas cada empleado de tu operación, uno a uno. Cada Skill es un especialista dedicado:
+          sabe lo que hace, tiene memoria, tiene contexto, ejecuta sin necesitar instrucción cada vez.
+          <strong style="color:var(--text)">Sin código. Sin programador.</strong>
+          Sal sabiendo crear cualquier pieza que tu operación necesite.
+        </p>
+        <div class="pilar-result">✅ Resultado: Tu equipo de I.A creado en vivo</div>
+      </div>
+
+      <div class="pilar-card">
+        <div class="pilar-num">Pilar 3</div>
+        <div class="pilar-title">AUTOMATIZAR</div>
+        <div class="pilar-subtitle">El equipo trabajando sin ti</div>
+        <p class="pilar-body">
+          Las piezas están creadas. Ahora aprendes a conectarlas. Flujos completos corriendo en secuencia,
+          un empleado pasando el trabajo al otro, sin ti en el medio.
+          El operativo sigue sucediendo aunque no estés mirando.
+        </p>
+        <div class="pilar-result">✅ Resultado: Operación corriendo sin ti</div>
+      </div>
+
+      <div class="pilar-card">
+        <div class="pilar-num">Pilar 4</div>
+        <div class="pilar-title">ESCALAR</div>
+        <div class="pilar-subtitle">En tu operación o para otras empresas</div>
+        <p class="pilar-body">
+          Sistema corriendo es sistema que sabes replicar. Cada nuevo cuello de botella que aparezca
+          en tu operación se convierte en otra Skill, no en otro costo.
+          Y quien llegó hasta aquí sabe hacer algo que la mayoría de las empresas aún está tratando de descubrir.
+        </p>
+        <div class="pilar-result">✅ Resultado: Sistema replicable — dentro o fuera de tu negocio</div>
+      </div>
+    </div>
+
+    <div class="programa-close">
+      <p>En 1 día, pasas por los 4 pilares. Y sales con tu equipo creado.<br>
+      No es teoría. Implementación en vivo, del Pilar 1 al Pilar 4.</p>
+      <a href="#precio" class="btn-primary">QUIERO CREAR MI EQUIPO DE I.A →</a>
+    </div>
+  </div>
+</section>
+
+<!-- BONUS -->
+<section class="bonus">
+  <div class="container">
+    <div class="section-badge">TAMBIÉN APRENDERÁS</div>
+    <h2>Dentro de la inmersión,<br>también aprenderás en práctica:</h2>
+
+    <div class="bonus-grid">
+      <div class="bonus-card">
+        <div class="bonus-icon">⚡</div>
+        <h3>Cuándo usar Claude, Claude Cowork y Claude Code</h3>
+        <p>Las tres herramientas existen. Cada una tiene su momento. Saber cuál usar en cada situación es lo que separa a quien opera con eficiencia de quien se pierde entre pestañas abiertas.</p>
+      </div>
+      <div class="bonus-card">
+        <div class="bonus-icon">🧩</div>
+        <h3>La diferencia crucial entre Skills, agentes y squads</h3>
+        <p>
+          <strong style="color:var(--accent3)">SKILL</strong> — instrucción especializada<br>
+          <strong style="color:var(--accent3)">AGENTE</strong> — ejecutor autónomo<br>
+          <strong style="color:var(--accent3)">SQUAD</strong> — equipo de agentes<br><br>
+          Entender la diferencia es lo que permite elegir la solución correcta para cada problema.
+        </p>
+      </div>
+      <div class="bonus-card">
+        <div class="bonus-icon">💡</div>
+        <h3>Cómo gestionar tokens sin quemar dinero</h3>
+        <p>Claude cobra por uso. Pero quien estructura bien las instrucciones usa muchos menos tokens para el mismo resultado. Aprenderás exactamente cómo hacer eso.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PARA QUIEN -->
+<section class="audiencia" id="para-quien">
+  <div class="container">
+    <div class="section-badge">PARA QUIÉN ES</div>
+    <h2>Esta inmersión es para ti si...</h2>
+
+    <div class="profiles-grid">
+      <div class="profile-card">
+        <div class="profile-icon">📣</div>
+        <h3>Agencia de Marketing</h3>
+        <p>Aún dependes de personas y herramientas caras para lo que podría correr en automático: briefing, copy, reportes, aprobación, entrega.</p>
+      </div>
+      <div class="profile-card">
+        <div class="profile-icon">🚀</div>
+        <h3>Negocio Digital</h3>
+        <p>Tienes infoproducto, lanzamiento o e-commerce y el costo crece más rápido que el resultado.</p>
+      </div>
+      <div class="profile-card">
+        <div class="profile-icon">🏢</div>
+        <h3>Empresario con Equipo</h3>
+        <p>Sostienes una nómina pesada para entregar lo que podría hacerse con mucho menos si la operación fuera más inteligente.</p>
+      </div>
+      <div class="profile-card">
+        <div class="profile-icon">⚡</div>
+        <h3>Solo pero con Visión</h3>
+        <p>Trabajas solo y quieres operar como si tuvieras un ejército de empleados detrás.</p>
+      </div>
+    </div>
+
+    <div class="audiencia-cta">
+      <strong>Si te viste en cualquiera de los perfiles de arriba:</strong>
+      <a href="#precio" class="btn-primary">ESTA INMERSIÓN ES PARA TI →</a>
+    </div>
+  </div>
+</section>
+
+<!-- OBJECIÓN -->
+<section class="objeccion">
+  <div class="objeccion-inner container">
+    <div class="section-badge">SIN EXPERIENCIA PREVIA</div>
+    <h2>¿Pero necesito tener experiencia con I.A para participar?</h2>
+    <div class="big-no">No.</div>
+    <p class="section-lead" style="margin:0 auto 32px;text-align:center">
+      La inmersión fue diseñada para quien parte de cero en Claude y también para quien ya lo usa pero quiere más eficiencia y resultado.
+      <br><br>
+      Lo único que necesitas es la sensación de que tu operación podría entregar más, gastando menos.
+    </p>
+    <div style="text-align:center">
+      <a href="#precio" class="btn-primary">QUIERO PARTICIPAR EN LA INMERSIÓN →</a>
+    </div>
+  </div>
+</section>
+
+<!-- PRECIO -->
+<section class="precio" id="precio">
+  <div class="container">
+    <div style="text-align:center;margin-bottom:40px">
+      <div class="section-badge">INVERSIÓN</div>
+      <h2>Ya pagas entre <em>$100 a más de $5,000 USD</em> al mes en empleados...</h2>
+      <p class="section-lead" style="margin:12px auto 0">
+        Para ejecutar lo que Claude ya puede hacer, cobrándote unos centavos.
+        En 1 día, aprendes a construir exactamente eso. ¿Y lo mejor? <em style="color:var(--accent3);font-style:normal;font-weight:700">por un precio irrisorio.</em>
+      </p>
+    </div>
+
+    <div class="price-card">
+      <div class="price-label">Precio del lote actual</div>
+      <div class="price-value"><span class="price-currency">USD</span> $27</div>
+      <p class="price-desc">Acceso completo a la inmersión de 8 horas en vivo · 18 de Abril</p>
+
+      <a href="#" class="btn-primary" style="width:100%;justify-content:center;font-size:1.05rem">
+        GARANTIZAR MI CUPO →
+      </a>
+
+      <div class="guarantees">
+        <div class="guarantee-item">Garantía 7 días incondicional</div>
+        <div class="guarantee-item">Acceso inmediato tras la inscripción</div>
+        <div class="guarantee-item">PayPal / Tarjeta de crédito / Tarjeta de débito</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MENTOR -->
+<section class="mentor">
+  <div class="container">
+    <div class="section-badge">TU MENTOR</div>
+    <h2>¿Quién será tu Mentor<br>en esta inmersión?</h2>
+    <div class="mentor-inner" style="margin-top:40px">
+      <div class="mentor-photo">
+        <img src="https://vibe.filesafe.space/1774786845621489154/attachments/395ff5e1-3d60-4f60-b557-2e01e43163df.jpg" alt="Angel Rodriguez" style="width:100%;height:100%;object-fit:cover;border-radius:18px;" />
+      </div>
+      <div>
+        <div class="mentor-name">Angel Rodriguez</div>
+        <div class="mentor-company">Fundador de MDC Company LLC</div>
+        <p class="mentor-bio">
+          Me sumergí en el mundo del marketing digital hace varios años y lo que encontré fue mi pasión y mi propósito. He trabajado incansablemente para aprender todo sobre el marketing digital — desde los fundamentos hasta las estrategias más avanzadas — llegando a invertir más de <strong>$40,000 en mi propia formación</strong>, compartiendo mentorías de forma presencial en diferentes escenarios en Latam, Brasil y España.
+          <br><br>
+          Hoy lo digo con mucho orgullo: hemos logrado junto al equipo una facturación de más de <strong>$1 millón de USD obteniendo 2 placas Hotmart Black</strong>.
+          <br><br>
+          Mi enfoque se centra en el valor real y duradero. No se trata solo de generar ingresos, sino de construir marcas sólidas y relaciones profundas con la audiencia.
+          <br><br>
+          Si estás buscando a alguien que te guíe, te motive y te inspire a alcanzar nuevas alturas — estás en el lugar correcto. Estoy aquí para apoyarte, desafiarte y celebrar contigo cada victoria en el camino.
+          <br><br>
+          <em style="color:var(--accent3)">Estás a un clic de distancia…</em>
+        </p>
+        <div class="mentor-stats">
+          <div class="mstat">
+            <div class="mstat-num">$40k+</div>
+            <div class="mstat-label">Invertido en formación</div>
+          </div>
+          <div class="mstat">
+            <div class="mstat-num">$1M+</div>
+            <div class="mstat-label">Facturación lograda</div>
+          </div>
+          <div class="mstat">
+            <div class="mstat-num">2x</div>
+            <div class="mstat-label">Placa Hotmart Black</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq" id="faq">
+  <div class="container">
+    <div style="text-align:center;margin-bottom:8px">
+      <div class="section-badge">FAQ</div>
+      <h2>Preguntas Frecuentes</h2>
+    </div>
+    <div class="faq-list">
+      <details>
+        <summary>¿Dónde ocurre el evento?</summary>
+        <p class="faq-answer">100% online, en vivo por Zoom. Son cupos limitados para garantizar una experiencia de implementación de calidad, con posibilidad de interacción en tiempo real.</p>
+      </details>
+      <details>
+        <summary>¿No tengo experiencia técnica. Voy a poder implementar?</summary>
+        <p class="faq-answer">Sí. No se necesita ningún conocimiento de programación ni experiencia previa con I.A. Aprendes a instruir a Claude en español y él ejecuta. La barrera técnica no existe en esta inmersión.</p>
+      </details>
+      <details>
+        <summary>¿Sirve para cualquier tipo de empresa o solo para infoproductos?</summary>
+        <p class="faq-answer">Para cualquier empresa, de cualquier nicho. Agencia de marketing, e-commerce, negocio de servicios, infoproducto, empresa con equipo o empresario solo. El sistema se adapta al tipo de operación que tienes.</p>
+      </details>
+      <details>
+        <summary>¿La inmersión quedará grabada?</summary>
+        <p class="faq-answer">La inmersión ocurre en vivo y debes participar el 18 de Abril. Pero al finalizar tu inscripción, tendrás la opción de adquirir acceso a la grabación.</p>
+      </details>
+      <details>
+        <summary>¿Tiene garantía?</summary>
+        <p class="faq-answer">Sí. 7 días de garantía incondicional. Si no quedas satisfecho, solo solicita el reembolso, sin preguntas y sin burocracia.</p>
+      </details>
+      <details>
+        <summary>¿Necesito suscripción de Claude para aprovechar la inmersión?</summary>
+        <p class="faq-answer">No. Lo que aprenderás también funciona en la versión gratuita. Pero notarás durante la inmersión que, en algún momento, invertir en un plan pago tendrá mucho sentido para lo que querrás construir.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="final-cta">
+  <div class="container" style="position:relative">
+    <div class="final-logo">⚡ OPERACIÓN CLAUDE CODE</div>
+    <h2>No esperes a que la ventana<br><em>se cierre para siempre</em></h2>
+    <div class="final-price-tag">18 de Abril · Solo USD $27</div>
+    <a href="#precio" class="btn-primary" style="font-size:1.1rem;padding:18px 44px">
+      QUIERO GARANTIZAR MI CUPO →
+    </a>
+  </div>
+</section>
+
+<footer>
+  <p>© 2026 MDC Company LLC · Operación Claude Code · Todos los derechos reservados</p>
+</footer>
+
+<script>
+  // Countdown — target: April 11, 2026 at 09:00 (America/Sao_Paulo = UTC-3)
+  const target = new Date('2026-04-18T09:00:00-03:00').getTime();
+
+  function updateClock() {
+    const now = Date.now();
+    const diff = Math.max(0, target - now);
+
+    const d = Math.floor(diff / 86400000);
+    const h = Math.floor((diff % 86400000) / 3600000);
+    const m = Math.floor((diff % 3600000) / 60000);
+    const s = Math.floor((diff % 60000) / 1000);
+
+    document.getElementById('cd-d').textContent = String(d).padStart(2, '0');
+    document.getElementById('cd-h').textContent = String(h).padStart(2, '0');
+    document.getElementById('cd-m').textContent = String(m).padStart(2, '0');
+    document.getElementById('cd-s').textContent = String(s).padStart(2, '0');
+  }
+
+  updateClock();
+  setInterval(updateClock, 1000);
+</script>
+
+</body>
+</html>
