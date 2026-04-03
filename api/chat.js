@@ -51,6 +51,7 @@ REGLAS DE CONVERSACIÓN
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 - Responde siempre en español.
 - MÁXIMO 2 oraciones por respuesta. Nunca más.
+- PROHIBIDO usar asteriscos, negritas, cursivas, markdown o cualquier formato. Solo texto plano.
 - Sin listas, sin bullets, sin títulos. Solo texto conversacional corto.
 - Haz UNA sola pregunta al final para continuar la conversación.
 - Si el usuario muestra interés o pide el enlace, manda: https://pay.hotmart.com/K105190029T?checkoutMode=10
@@ -110,7 +111,8 @@ module.exports = async (req, res) => {
     if (!apiKey) return res.status(500).json({ reply: 'Configuración pendiente.' });
 
     const data = await callClaude(messages, apiKey);
-    const reply = data.content?.[0]?.text || 'No pude generar una respuesta.';
+    const raw = data.content?.[0]?.text || 'No pude generar una respuesta.';
+    const reply = raw.replace(/\*\*/g, '').replace(/\*/g, '').replace(/#{1,6}\s/g, '').replace(/_/g, '');
     return res.status(200).json({ reply });
   } catch (err) {
     return res.status(500).json({ reply: 'Hubo un error. Intenta de nuevo.' });
