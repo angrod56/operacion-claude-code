@@ -1861,10 +1861,6 @@
     this.style.height = Math.min(this.scrollHeight, 80) + 'px';
   });
 
-  // Abrir automáticamente después de 15 segundos si no interactuó
-  setTimeout(() => {
-    if (!chatWindow.classList.contains('open')) openChat();
-  }, 15000);
 
   // ── NOTIFICACIONES DE VENTA FLOTANTES ──
   const compradores = [
