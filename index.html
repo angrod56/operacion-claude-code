@@ -1548,6 +1548,132 @@
 
   updateClock();
   setInterval(updateClock, 1000);
+
+  // ── NOTIFICACIONES DE VENTA FLOTANTES ──
+  const compradores = [
+    { nombre: 'Carlos M.',    ciudad: 'Bogotá',          pais: '🇨🇴' },
+    { nombre: 'Valentina R.', ciudad: 'Medellín',        pais: '🇨🇴' },
+    { nombre: 'Diego F.',     ciudad: 'Ciudad de México', pais: '🇲🇽' },
+    { nombre: 'Sofía L.',     ciudad: 'Monterrey',       pais: '🇲🇽' },
+    { nombre: 'Andrés P.',    ciudad: 'Lima',            pais: '🇵🇪' },
+    { nombre: 'Camila T.',    ciudad: 'Santiago',        pais: '🇨🇱' },
+    { nombre: 'Luis G.',      ciudad: 'Buenos Aires',    pais: '🇦🇷' },
+    { nombre: 'María J.',     ciudad: 'Caracas',         pais: '🇻🇪' },
+    { nombre: 'Roberto S.',   ciudad: 'Quito',           pais: '🇪🇨' },
+    { nombre: 'Fernanda A.',  ciudad: 'São Paulo',       pais: '🇧🇷' },
+    { nombre: 'Miguel H.',    ciudad: 'Madrid',          pais: '🇪🇸' },
+    { nombre: 'Paola V.',     ciudad: 'Miami',           pais: '🇺🇸' },
+    { nombre: 'Sebastián C.', ciudad: 'Guadalajara',     pais: '🇲🇽' },
+    { nombre: 'Laura N.',     ciudad: 'Cali',            pais: '🇨🇴' },
+    { nombre: 'Jorge E.',     ciudad: 'Asunción',        pais: '🇵🇾' },
+    { nombre: 'Ana K.',       ciudad: 'Montevideo',      pais: '🇺🇾' },
+    { nombre: 'Felipe O.',    ciudad: 'Barranquilla',    pais: '🇨🇴' },
+    { nombre: 'Daniela W.',   ciudad: 'Ciudad Panamá',   pais: '🇵🇦' },
+    { nombre: 'Ricardo B.',   ciudad: 'Santo Domingo',   pais: '🇩🇴' },
+    { nombre: 'Natalia Z.',   ciudad: 'Barcelona',       pais: '🇪🇸' },
+  ];
+
+  // Estilos del toast
+  const style = document.createElement('style');
+  style.textContent = `
+    .toast-venta {
+      position: fixed;
+      bottom: 24px;
+      left: 24px;
+      background: #0f0e0c;
+      border: 1px solid rgba(251,146,60,.35);
+      border-left: 4px solid #fb923c;
+      border-radius: 12px;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      z-index: 9999;
+      box-shadow: 0 8px 32px rgba(0,0,0,.5);
+      max-width: 300px;
+      transform: translateX(-120%);
+      transition: transform .4s cubic-bezier(.34,1.56,.64,1);
+      font-family: 'Inter', sans-serif;
+    }
+    .toast-venta.show { transform: translateX(0); }
+    .toast-icon {
+      font-size: 1.6rem;
+      flex-shrink: 0;
+    }
+    .toast-texto { line-height: 1.4; }
+    .toast-accion {
+      font-size: .7rem;
+      color: #fb923c;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+    }
+    .toast-nombre {
+      font-size: .88rem;
+      font-weight: 700;
+      color: #f5f0eb;
+    }
+    .toast-lugar {
+      font-size: .78rem;
+      color: #a89880;
+    }
+    .toast-tiempo {
+      font-size: .7rem;
+      color: #6b5a48;
+      margin-top: 2px;
+    }
+  `;
+  document.head.appendChild(style);
+
+  let toastActivo = null;
+  let indice = Math.floor(Math.random() * compradores.length);
+
+  function tiempoAleatorio() {
+    const mins = Math.floor(Math.random() * 55) + 1;
+    if (mins === 1) return 'hace 1 minuto';
+    if (mins < 60) return `hace ${mins} minutos`;
+    return 'hace 1 hora';
+  }
+
+  function mostrarToast() {
+    if (toastActivo) {
+      toastActivo.remove();
+      toastActivo = null;
+    }
+
+    const c = compradores[indice % compradores.length];
+    indice++;
+
+    const toast = document.createElement('div');
+    toast.className = 'toast-venta';
+    toast.innerHTML = `
+      <div class="toast-icon">${c.pais}</div>
+      <div class="toast-texto">
+        <div class="toast-accion">⚡ Nueva compra</div>
+        <div class="toast-nombre">${c.nombre}</div>
+        <div class="toast-lugar">${c.ciudad}</div>
+        <div class="toast-tiempo">${tiempoAleatorio()}</div>
+      </div>
+    `;
+
+    document.body.appendChild(toast);
+    toastActivo = toast;
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => toast.classList.add('show'));
+    });
+
+    setTimeout(() => {
+      toast.classList.remove('show');
+      setTimeout(() => { toast.remove(); toastActivo = null; }, 400);
+    }, 4000);
+  }
+
+  // Primera notificación a los 6 segundos, luego cada 12-20 segundos
+  setTimeout(() => {
+    mostrarToast();
+    setInterval(mostrarToast, Math.random() * 8000 + 12000);
+  }, 6000);
 </script>
 
 </body>
