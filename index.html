@@ -268,12 +268,29 @@
       border: none;
       cursor: pointer;
       letter-spacing: .01em;
-      transition: transform .15s, box-shadow .15s;
+      position: relative;
+      overflow: hidden;
+      transition: transform .2s, box-shadow .2s;
       box-shadow: 0 0 32px rgba(194,65,12,.45);
+    }
+    .btn-primary::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -75%;
+      width: 50%;
+      height: 200%;
+      background: rgba(255,255,255,.18);
+      transform: skewX(-20deg);
+      transition: left .5s ease;
+      pointer-events: none;
     }
     .btn-primary:hover {
       transform: translateY(-2px);
-      box-shadow: 0 0 48px rgba(194,65,12,.65);
+      box-shadow: 0 0 64px rgba(251,146,60,.75), 0 0 24px rgba(194,65,12,.5);
+    }
+    .btn-primary:hover::after {
+      left: 130%;
     }
     .btn-secondary {
       display: inline-flex;
@@ -732,6 +749,28 @@
       padding: 40px 36px;
       text-align: center;
       box-shadow: 0 0 60px rgba(194,65,12,.25);
+      position: relative;
+      overflow: hidden;
+      animation: priceGlow 3s ease-in-out infinite;
+    }
+    @keyframes priceGlow {
+      0%,100% { box-shadow: 0 0 40px rgba(194,65,12,.25), 0 0 80px rgba(194,65,12,.1); }
+      50%      { box-shadow: 0 0 70px rgba(251,146,60,.5), 0 0 120px rgba(194,65,12,.25); }
+    }
+    .price-card::before {
+      content: '';
+      position: absolute;
+      top: -60%;
+      left: -60%;
+      width: 220%;
+      height: 220%;
+      background: radial-gradient(circle at center, rgba(251,146,60,.07) 0%, transparent 60%);
+      animation: priceShine 6s linear infinite;
+      pointer-events: none;
+    }
+    @keyframes priceShine {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
     }
     .price-label {
       font-size: .8rem;
