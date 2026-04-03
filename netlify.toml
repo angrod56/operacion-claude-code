@@ -1,5 +1,5 @@
 [functions]
-  node_bundler = "esbuild"
+  node_bundler = "nft"
 
 [build]
   functions = "netlify/functions"
