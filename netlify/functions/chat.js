@@ -108,6 +108,20 @@ exports.handler = async (event) => {
     return { statusCode: 200, headers, body: '' };
   }
 
+  // Debug endpoint
+  if (event.httpMethod === 'GET') {
+    const key = process.env.ANTHROPIC_API_KEY;
+    return {
+      statusCode: 200,
+      headers,
+      body: JSON.stringify({
+        hasKey: !!key,
+        keyLength: key ? key.length : 0,
+        keyStart: key ? key.substring(0, 10) : 'NOT FOUND',
+      }),
+    };
+  }
+
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, headers, body: JSON.stringify({ reply: 'Method Not Allowed' }) };
   }
