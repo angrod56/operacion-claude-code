@@ -1,3 +1,5 @@
+const https = require('https');
+
 const SYSTEM_PROMPT = `Eres el asistente de ventas de Angel Rodriguez y MDC Company LLC para la inmersión "Operación Claude Code".
 
 Tu objetivo es responder dudas, generar confianza y cerrar la venta. Eres directo, cálido y persuasivo — como un buen vendedor, no como un bot.
@@ -36,7 +38,7 @@ PREGUNTAS FRECUENTES
 ¿Sirve para mi tipo de negocio? Sí, para cualquier nicho o industria.
 ¿Queda grabado? La inmersión es en vivo. Al inscribirte puedes adquirir la grabación.
 ¿Qué pasa si no me gusta? 7 días de garantía. Reembolso sin preguntas.
-¿Necesito suscripción de Claude? No, funciona con la versión gratuita, aunque en la inmersión verás el valor del plan pago.
+¿Necesito suscripción de Claude? No, funciona con la versión gratuita.
 ¿Dónde es? 100% online por Zoom.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -49,55 +51,88 @@ REGLAS DE CONVERSACIÓN
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 - Responde siempre en español.
 - Sé conciso: máximo 3-4 oraciones por respuesta salvo que el usuario pida más detalle.
-- Haz UNA pregunta al final de cada respuesta para mantener la conversación y entender mejor la situación del usuario.
-- Si el usuario muestra interés, dudas sobre el precio o pide el enlace, incluye el link de compra: https://pay.hotmart.com/K105190029T?checkoutMode=10
-- Si el usuario dice que no tiene dinero o que es caro, recuérdales que $27 es menos de lo que gastan en herramientas en un día, y que tienen 7 días de garantía.
-- Nunca presiones de forma agresiva. Genera confianza primero, luego invita a comprar.
-- Si preguntan algo que no sabes, di que Angel lo resolverá en vivo durante la inmersión.
-- Cuando sea el momento de cerrar, usa frases como: "¿Qué te impide garantizar tu cupo hoy?" o "El precio sube cuando se agoten los cupos — ¿lo aseguramos ahora?"`;
+- Haz UNA pregunta al final de cada respuesta para mantener la conversación.
+- Si el usuario muestra interés o pide el enlace, incluye: https://pay.hotmart.com/K105190029T?checkoutMode=10
+- Si dicen que es caro, recuérdales que $27 es menos de lo que gastan en herramientas en un día, y tienen 7 días de garantía.
+- Nunca presiones agresivamente. Genera confianza primero.
+- Cuando sea el momento de cerrar usa: "¿Qué te impide garantizar tu cupo hoy?" o "El precio sube cuando se agoten los cupos — ¿lo aseguramos ahora?"`;
 
-exports.handler = async (event) => {
-  if (event.httpMethod !== 'POST') {
-    return { statusCode: 405, body: 'Method Not Allowed' };
-  }
+function callClaude(messages, apiKey) {
+  return new Promise((resolve, reject) => {
+    const body = JSON.stringify({
+      model: 'claude-haiku-4-5-20251001',
+      max_tokens: 400,
+      system: SYSTEM_PROMPT,
+      messages,
+    });
 
-  const headers = {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Headers': 'Content-Type',
-    'Content-Type': 'application/json',
-  };
-
-  try {
-    const { messages } = JSON.parse(event.body);
-
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
+    const options = {
+      hostname: 'api.anthropic.com',
+      path: '/v1/messages',
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': process.env.ANTHROPIC_API_KEY,
+        'x-api-key': apiKey,
         'anthropic-version': '2023-06-01',
+        'Content-Length': Buffer.byteLength(body),
       },
-      body: JSON.stringify({
-        model: 'claude-haiku-4-5-20251001',
-        max_tokens: 400,
-        system: SYSTEM_PROMPT,
-        messages,
-      }),
+    };
+
+    const req = https.request(options, (res) => {
+      let data = '';
+      res.on('data', chunk => data += chunk);
+      res.on('end', () => {
+        try {
+          resolve(JSON.parse(data));
+        } catch (e) {
+          reject(new Error('Invalid JSON response'));
+        }
+      });
     });
 
-    const data = await response.json();
-    const reply = data.content?.[0]?.text || 'Lo siento, hubo un error. Intenta de nuevo.';
+    req.on('error', reject);
+    req.write(body);
+    req.end();
+  });
+}
 
-    return {
-      statusCode: 200,
-      headers,
-      body: JSON.stringify({ reply }),
-    };
+exports.handler = async (event) => {
+  const headers = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Content-Type': 'application/json',
+  };
+
+  if (event.httpMethod === 'OPTIONS') {
+    return { statusCode: 200, headers, body: '' };
+  }
+
+  if (event.httpMethod !== 'POST') {
+    return { statusCode: 405, headers, body: JSON.stringify({ reply: 'Method Not Allowed' }) };
+  }
+
+  try {
+    const { messages } = JSON.parse(event.body);
+    const apiKey = process.env.ANTHROPIC_API_KEY;
+
+    if (!apiKey) {
+      return {
+        statusCode: 500,
+        headers,
+        body: JSON.stringify({ reply: 'Configuración pendiente. Intenta en unos minutos.' }),
+      };
+    }
+
+    const data = await callClaude(messages, apiKey);
+    const reply = data.content?.[0]?.text || 'Lo siento, no pude generar una respuesta.';
+
+    return { statusCode: 200, headers, body: JSON.stringify({ reply }) };
   } catch (err) {
     return {
       statusCode: 500,
       headers,
-      body: JSON.stringify({ reply: 'Hubo un error. Por favor intenta de nuevo.' }),
+      body: JSON.stringify({ reply: 'Hubo un error al procesar tu mensaje. Intenta de nuevo.' }),
     };
   }
 };
