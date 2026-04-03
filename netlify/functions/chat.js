@@ -111,6 +111,7 @@ exports.handler = async (event) => {
   // Debug endpoint
   if (event.httpMethod === 'GET') {
     const key = process.env.ANTHROPIC_API_KEY;
+    const allKeys = Object.keys(process.env).filter(k => !k.includes('SECRET') && !k.includes('TOKEN') && !k.includes('KEY') && !k.includes('PASS'));
     return {
       statusCode: 200,
       headers,
@@ -118,6 +119,7 @@ exports.handler = async (event) => {
         hasKey: !!key,
         keyLength: key ? key.length : 0,
         keyStart: key ? key.substring(0, 10) : 'NOT FOUND',
+        availableEnvKeys: allKeys,
       }),
     };
   }
