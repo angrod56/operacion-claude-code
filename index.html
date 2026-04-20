@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Operación Claude Code — 18 de Abril</title>
+  <title>Operación Claude Code — 02 de Mayo</title>
   <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-001L65ZCXL"></script>
   <script>
@@ -963,7 +963,7 @@
 <nav class="topbar">
   <span class="topbar-name">Operación Claude Code</span>
   <div class="topbar-info">
-    <span class="topbar-date">18 de Abril</span>
+    <span class="topbar-date">02 de Mayo</span>
     <span class="topbar-price">USD $27</span>
   </div>
 </nav>
@@ -974,7 +974,7 @@
   <div class="hero-inner">
     <div class="eyebrow">
       <span class="eyebrow-dot"></span>
-      8 Horas de Inmersión En Vivo — 18 de Abril · 9AM a 4PM (Colombia)
+      Inmersión En Vivo — 02 de Mayo · 9AM a 1PM (Colombia)
     </div>
 
     <h1>1 día para colocar <em>equipos de I.A</em> funcionando en tu operación</h1>
@@ -1472,7 +1472,7 @@
     <div class="price-card">
       <div class="price-label">Precio del lote actual</div>
       <div class="price-value"><span class="price-currency">USD</span> $27</div>
-      <p class="price-desc">Acceso completo a la inmersión en vivo · 18 de Abril · 9AM–4PM (Colombia)</p>
+      <p class="price-desc">Acceso completo a la inmersión en vivo · 02 de Mayo · 9AM–1PM (Colombia)</p>
 
       <a href="https://pay.hotmart.com/K105190029T?checkoutMode=10" target="_blank" class="btn-primary" style="width:100%;justify-content:center;font-size:1.05rem">
         GARANTIZAR MI CUPO →
@@ -1546,7 +1546,7 @@
     <div class="faq-list">
       <details>
         <summary>¿Dónde ocurre el evento?</summary>
-        <p class="faq-answer">100% online, en vivo por Zoom. El 18 de Abril de 9AM a 4PM hora Colombia. Son cupos limitados para garantizar una experiencia de implementación de calidad, con posibilidad de interacción en tiempo real.</p>
+        <p class="faq-answer">100% online, en vivo por Zoom. El 02 de Mayo de 9AM a 1PM hora Colombia. Son cupos limitados para garantizar una experiencia de implementación de calidad, con posibilidad de interacción en tiempo real.</p>
       </details>
       <details>
         <summary>¿No tengo experiencia técnica. Voy a poder implementar?</summary>
@@ -1558,7 +1558,7 @@
       </details>
       <details>
         <summary>¿La inmersión quedará grabada?</summary>
-        <p class="faq-answer">La inmersión ocurre en vivo el 18 de Abril de 9AM a 4PM hora Colombia y debes participar ese día. Pero al finalizar tu inscripción, tendrás la opción de adquirir acceso a la grabación.</p>
+        <p class="faq-answer">La inmersión ocurre en vivo el 02 de Mayo de 9AM a 1PM hora Colombia y debes participar ese día. Pero al finalizar tu inscripción, tendrás la opción de adquirir acceso a la grabación.</p>
       </details>
       <details>
         <summary>¿Tiene garantía?</summary>
@@ -1577,7 +1577,7 @@
   <div class="container" style="position:relative">
     <div class="final-logo">⚡ OPERACIÓN CLAUDE CODE</div>
     <h2>No esperes a que la ventana<br><em>se cierre para siempre</em></h2>
-    <div class="final-price-tag">18 de Abril · 9AM–4PM Colombia · Solo USD $27</div>
+    <div class="final-price-tag">02 de Mayo · 9AM–1PM Colombia · Solo USD $27</div>
     <a href="https://pay.hotmart.com/K105190029T?checkoutMode=10" target="_blank" class="btn-primary" style="font-size:1.1rem;padding:18px 44px">
       QUIERO GARANTIZAR MI CUPO →
     </a>
@@ -1590,7 +1590,7 @@
 
 <script>
   // Countdown — target: April 11, 2026 at 09:00 (America/Sao_Paulo = UTC-3)
-  const target = new Date('2026-04-18T09:00:00-03:00').getTime();
+  const target = new Date('2026-05-02T09:00:00-05:00').getTime();
 
   function updateClock() {
     const now = Date.now();
@@ -1609,6 +1609,115 @@
 
   updateClock();
   setInterval(updateClock, 1000);
+
+  // ── ANIMACIONES AL HACER SCROLL ──
+  const animStyle = document.createElement('style');
+  animStyle.textContent = `
+    .fade-in { opacity: 0; transform: translateY(32px); transition: opacity .7s ease, transform .7s ease; }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+    .fade-in-left { opacity: 0; transform: translateX(-40px); transition: opacity .7s ease, transform .7s ease; }
+    .fade-in-left.visible { opacity: 1; transform: translateX(0); }
+    .fade-in-right { opacity: 0; transform: translateX(40px); transition: opacity .7s ease, transform .7s ease; }
+    .fade-in-right.visible { opacity: 1; transform: translateX(0); }
+    .scale-in { opacity: 0; transform: scale(.92); transition: opacity .6s ease, transform .6s ease; }
+    .scale-in.visible { opacity: 1; transform: scale(1); }
+  `;
+  document.head.appendChild(animStyle);
+
+  // Aplicar clases a elementos clave
+  document.querySelectorAll('.pilar-card').forEach((el, i) => {
+    el.classList.add(i % 2 === 0 ? 'fade-in-left' : 'fade-in-right');
+  });
+  document.querySelectorAll('.testi-card').forEach(el => el.classList.add('fade-in'));
+  document.querySelectorAll('.bonus-card').forEach(el => el.classList.add('scale-in'));
+  document.querySelectorAll('.profile-card').forEach(el => el.classList.add('fade-in'));
+  document.querySelectorAll('h2').forEach(el => el.classList.add('fade-in'));
+  document.querySelectorAll('.quote-box').forEach(el => el.classList.add('fade-in'));
+  document.querySelectorAll('.price-card').forEach(el => el.classList.add('scale-in'));
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, idx) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), idx * 80);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.fade-in, .fade-in-left, .fade-in-right, .scale-in').forEach(el => observer.observe(el));
+
+  // ── CONTADORES ANIMADOS ──
+  function animateCounter(el, target, prefix = '', suffix = '') {
+    const duration = 1800;
+    const start = performance.now();
+    const update = (now) => {
+      const progress = Math.min((now - start) / duration, 1);
+      const ease = 1 - Math.pow(1 - progress, 3);
+      const value = Math.floor(ease * target);
+      el.textContent = prefix + value.toLocaleString() + suffix;
+      if (progress < 1) requestAnimationFrame(update);
+    };
+    requestAnimationFrame(update);
+  }
+
+  const counterObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const el = entry.target;
+        const raw = el.dataset.count;
+        const prefix = el.dataset.prefix || '';
+        const suffix = el.dataset.suffix || '';
+        animateCounter(el, parseInt(raw), prefix, suffix);
+        counterObserver.unobserve(el);
+      }
+    });
+  }, { threshold: 0.5 });
+
+  // Aplicar contadores a métricas del mentor
+  document.querySelectorAll('.mstat-num').forEach(el => {
+    const txt = el.textContent.trim();
+    if (txt === '$40k+') { el.dataset.count = '40'; el.dataset.prefix = '$'; el.dataset.suffix = 'k+'; el.textContent = '$0k+'; counterObserver.observe(el); }
+    if (txt === '$1M+') { el.dataset.count = '1'; el.dataset.prefix = '$'; el.dataset.suffix = 'M+'; el.textContent = '$0M+'; counterObserver.observe(el); }
+    if (txt === '7k+') { el.dataset.count = '7'; el.dataset.suffix = 'k+'; el.textContent = '0k+'; counterObserver.observe(el); }
+    if (txt === '6+') { el.dataset.count = '6'; el.dataset.suffix = '+'; el.textContent = '0+'; counterObserver.observe(el); }
+  });
+
+  // ── PARTÍCULAS EN EL HERO ──
+  const canvas = document.createElement('canvas');
+  canvas.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;opacity:.4;';
+  document.querySelector('.hero').prepend(canvas);
+  const ctx = canvas.getContext('2d');
+
+  function resizeCanvas() {
+    canvas.width = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
+  }
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
+
+  const particles = Array.from({ length: 40 }, () => ({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    r: Math.random() * 2 + .5,
+    dx: (Math.random() - .5) * .4,
+    dy: (Math.random() - .5) * .4,
+    o: Math.random() * .5 + .2,
+  }));
+
+  function drawParticles() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(p => {
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(251,146,60,${p.o})`;
+      ctx.fill();
+      p.x += p.dx; p.y += p.dy;
+      if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
+      if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
+    });
+    requestAnimationFrame(drawParticles);
+  }
+  drawParticles();
 
   // ── WIDGET DE CHAT ──
   const chatStyle = document.createElement('style');
@@ -1877,7 +1986,7 @@
     chatBadge.style.display = 'none';
     if (history.length === 0) {
       setTimeout(() => {
-        addMsg('¡Hola! 👋 Soy el asistente de <strong>Operación Claude Code</strong>.<br>¿Tienes alguna duda sobre la inmersión del <strong>18 de Abril</strong>? Con gusto te ayudo.', 'bot');
+        addMsg('¡Hola! 👋 Soy el asistente de <strong>Operación Claude Code</strong>.<br>¿Tienes alguna duda sobre la inmersión del <strong>02 de Mayo</strong>? Con gusto te ayudo.', 'bot');
       }, 300);
     }
     chatInput.focus();
