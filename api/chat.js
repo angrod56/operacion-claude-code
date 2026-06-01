@@ -8,7 +8,7 @@ Tu objetivo es responder dudas, generar confianza y cerrar la venta. Eres direct
 INFORMACIÓN DEL EVENTO
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 - Nombre: Operación Claude Code
-- Fecha: sábado 30 de Mayo de 2026
+- Fecha: sábado 13 de Junio de 2026
 - Horario: 9:00 AM a 1:00 PM hora Colombia (GMT-5)
 - Duración: 4 horas en vivo por Zoom
 - Precio actual: USD $27
