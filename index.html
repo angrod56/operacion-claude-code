@@ -100,6 +100,23 @@
       border-radius: 999px;
       font-size: 13px;
     }
+    .topbar-buy {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--accent2) 0%, var(--accent3) 100%);
+      color: #fff;
+      padding: 6px 16px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .03em;
+      text-decoration: none;
+      box-shadow: 0 2px 12px rgba(251, 146, 60, 0.35);
+      transition: transform .15s ease, box-shadow .15s ease;
+    }
+    .topbar-buy:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 18px rgba(251, 146, 60, 0.55);
+    }
 
     /* ─── HERO ─── */
     .hero {
@@ -950,7 +967,9 @@
 
     /* ─── RESPONSIVE ─── */
     @media (max-width: 640px) {
-      .topbar { flex-direction: column; gap: 8px; }
+      .topbar { flex-direction: column; gap: 8px; padding: 10px 16px; }
+      .topbar-info { flex-wrap: wrap; justify-content: center; gap: 10px; }
+      .topbar-buy { padding: 7px 18px; font-size: 13px; }
       .pillars { grid-template-columns: 1fr; }
       .mentor-inner { grid-template-columns: 1fr; }
       .compare-table { font-size: .82rem; }
@@ -968,6 +987,7 @@
   <div class="topbar-info">
     <span class="topbar-date">13 de Junio</span>
     <span class="topbar-price">USD $27</span>
+    <a href="https://pay.hotmart.com/K105190029T?checkoutMode=10" target="_blank" class="topbar-buy">COMPRAR →</a>
   </div>
 </nav>
 
